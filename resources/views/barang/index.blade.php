@@ -46,7 +46,7 @@
                     <td>{{ $b->kategori }}</td>
                     <td>{{ $b->jumlah }}</td>
                     <td>
-                        <img src="data:image/svg+xml;base64,{{ $b->qr_code }}"width="150">
+                        <img src="data:image/svg+xml;base64,{{ $b->qr_code }}"width="180">
                     </td>
 
                     <td>

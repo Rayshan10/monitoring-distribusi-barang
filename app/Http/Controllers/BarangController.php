@@ -19,7 +19,7 @@ class BarangController extends Controller
         return view('barang.create');
     }
 
-    public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
         'kode_barang' => 'required|unique:barangs',
@@ -28,19 +28,23 @@ class BarangController extends Controller
         'jumlah' => 'required|integer',
     ]);
 
-    $qr = base64_encode(
-        QrCode::format('svg')
-            ->size(500)
-            ->generate($request->kode_barang)
-    );
-
-    Barang::create([
+    $barang = Barang::create([
         'kode_barang' => $request->kode_barang,
         'nama_barang' => $request->nama_barang,
         'kategori' => $request->kategori,
         'jumlah' => $request->jumlah,
         'deskripsi' => $request->deskripsi,
-        'qr_code' => $qr,
+    ]);
+
+    $qr = base64_encode(
+        QrCode::format('svg')
+            ->size(500)
+            ->margin(2)
+            ->generate(url('/barang/' . $barang->id))
+    );
+
+    $barang->update([
+        'qr_code' => $qr
     ]);
 
     return redirect('/barang')
@@ -69,5 +73,10 @@ class BarangController extends Controller
 
         return redirect('/barang')
             ->with('success', 'Data barang berhasil dihapus');
+    }
+
+    public function show(Barang $barang)
+    {
+        return view('barang.show', compact('barang'));
     }
 }

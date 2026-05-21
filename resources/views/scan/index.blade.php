@@ -45,8 +45,7 @@ function onScanSuccess(decodedText, decodedResult) {
     document.getElementById('result').innerHTML =
         "QR Code: " + decodedText;
 
-    window.location.href =
-        "/barang?search=" + decodedText;
+    window.location.href = decodedText;
 }
 
 let html5QrcodeScanner = new Html5QrcodeScanner(
