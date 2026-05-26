@@ -14,6 +14,12 @@ class Barang extends Model
     'deskripsi',
     'qr_code',
     'status',
+
+    'urgensi',
+    'lama_penyimpanan',
+    'tingkat_keterlambatan',
+
+    'nilai_saw',
     ];
 
     public function trackings()

@@ -151,6 +151,132 @@
 
     </div>
 
+    
+<!-- Ranking Prioritas Distribusi -->
+
+<div class="card shadow border-0 mt-4">
+
+    <div class="card-body">
+
+        <h4 class="mb-4">
+
+            Ranking Prioritas Distribusi
+            (Metode SAW)
+
+        </h4>
+
+        @php
+    $topPriority = $rankingSAW->first();
+@endphp
+
+@if($topPriority)
+
+<div class="alert alert-danger">
+
+    <h5>
+        Barang Prioritas Tertinggi
+    </h5>
+
+    <strong>
+        {{ $topPriority->kode_barang }}
+    </strong>
+    -
+    {{ $topPriority->nama_barang }}
+
+    <br>
+
+    Nilai SAW:
+    {{ $topPriority->nilai_saw }}
+
+</div>
+
+@endif
+
+
+            <a href="/hitung-saw" class="btn btn-success mb-4">
+                Hitung Prioritas Distribusi (SAW)
+            </a>
+        <table class="table table-bordered">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Ranking</th>
+
+                    <th>Kode Barang</th>
+
+                    <th>Nama Barang</th>
+
+                    <th>Nilai SAW</th>
+
+                    <th>Prioritas</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach($rankingSAW as $index => $b)
+
+                <tr>
+
+                    <td>
+                        {{ $index + 1 }}
+                    </td>
+
+                    <td>
+                        {{ $b->kode_barang }}
+                    </td>
+
+                    <td>
+                        {{ $b->nama_barang }}
+                    </td>
+
+                    <td>
+
+                        <strong>
+                            {{ $b->nilai_saw }}
+                        </strong>
+
+                    </td>
+
+                    <td>
+
+                        @if($b->nilai_saw >= 0.80)
+
+                            <span class="badge bg-danger">
+                                Sangat Prioritas
+                            </span>
+
+                        @elseif($b->nilai_saw >= 0.60)
+
+                            <span class="badge bg-warning text-dark">
+                                Prioritas
+                            </span>
+
+                        @else
+
+                            <span class="badge bg-success">
+                                Normal
+                            </span>
+
+                        @endif
+
+                    </td>
+
+                </tr>
+
+                @endforeach
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
 </div>
 
 @endsection

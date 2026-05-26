@@ -50,6 +50,16 @@ class BarangController extends Controller
 
             'status' => 'Barang Diproses',
 
+            // =========================
+            // FIELD SAW
+            // =========================
+
+            'urgensi' => $request->urgensi,
+
+            'lama_penyimpanan' => $request->lama_penyimpanan,
+
+            'tingkat_keterlambatan' => $request->tingkat_keterlambatan,
+
         ]);
 
         Tracking::create([
@@ -222,5 +232,104 @@ class BarangController extends Controller
             'success' => true,
             'barang' => $barang
         ]);
+    }
+
+    public function hitungSAW()
+    {
+        $barang = Barang::all();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cari nilai maksimum
+        |--------------------------------------------------------------------------
+        */
+
+        $maxUrgensi =
+            Barang::max('urgensi');
+
+        $maxLamaPenyimpanan =
+            Barang::max('lama_penyimpanan');
+
+        $maxKeterlambatan =
+            Barang::max('tingkat_keterlambatan');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Bobot
+        |--------------------------------------------------------------------------
+        */
+
+        $bobotUrgensi = 0.40;
+
+        $bobotLamaPenyimpanan = 0.35;
+
+        $bobotKeterlambatan = 0.25;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Hitung SAW
+        |--------------------------------------------------------------------------
+        */
+
+        foreach($barang as $b)
+        {
+        /*
+        |--------------------------------------------------------------------------
+        | Normalisasi
+        |--------------------------------------------------------------------------
+        */
+
+            $rUrgensi =
+                $b->urgensi /
+                $maxUrgensi;
+
+            $rLamaPenyimpanan =
+                $b->lama_penyimpanan /
+                $maxLamaPenyimpanan;
+
+            $rKeterlambatan =
+                $b->tingkat_keterlambatan /
+                $maxKeterlambatan;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Nilai akhir SAW
+        |--------------------------------------------------------------------------
+        */
+
+            $nilaiSAW =
+
+                ($rUrgensi *
+                    $bobotUrgensi)
+
+                +
+
+                ($rLamaPenyimpanan *
+                    $bobotLamaPenyimpanan)
+
+                +
+
+                ($rKeterlambatan *
+                    $bobotKeterlambatan);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Simpan nilai SAW
+        |--------------------------------------------------------------------------
+        */
+
+            $b->update([
+
+                'nilai_saw' =>
+                    round($nilaiSAW, 3)
+
+            ]);
+        }
+
+        return redirect('/dashboard')
+            ->with(
+                'success',
+                'Perhitungan SAW berhasil'
+            );
     }
 }

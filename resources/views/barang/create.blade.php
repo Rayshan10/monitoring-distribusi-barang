@@ -46,6 +46,29 @@
                           class="form-control"></textarea>
             </div>
 
+            <div class="mb-3">
+                <label>Tingkat Urgensi</label>
+                <select name="urgensi" class="form-control">
+                    <option value="1">Rendah</option>
+                    <option value="3">Sedang</option>
+                    <option value="5">Tinggi</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label>Lama Penyimpanan</label>
+                <input type="number"
+                       name="lama_penyimpanan"
+                       class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label>Tingkat Keterlambatan</label>
+                <input type="number"
+                       name="tingkat_keterlambatan"
+                       class="form-control">
+            </div>
+
             <button type="submit"
                     class="btn btn-primary">
                 Simpan

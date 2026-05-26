@@ -40,6 +40,11 @@ class DashboardController extends Controller
             Tracking::latest()
                 ->take(5)
                 ->get();
+        
+        $rankingSAW = 
+            Barang::orderByDesc(
+                'nilai_saw'
+            )->get();
 
         return view('dashboard', compact(
 
@@ -53,7 +58,9 @@ class DashboardController extends Controller
 
             'barangDiterima',
 
-            'trackingTerbaru'
+            'trackingTerbaru',
+
+            'rankingSAW'
 
         ));
     }
