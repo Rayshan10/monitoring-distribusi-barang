@@ -187,89 +187,40 @@ class BarangController extends Controller
 
     public function scanUpdateStatus(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Ambil URL dari QR
-        |--------------------------------------------------------------------------
-        */
-
         $url = trim($request->kode_barang);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Ambil path URL
-        | contoh:
-        | /barang/BRG001
-        |--------------------------------------------------------------------------
-        */
-
-        $path = parse_url(
-            $url,
-            PHP_URL_PATH
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | Ambil kode barang
-        |--------------------------------------------------------------------------
-        */
-
+        $path = parse_url($url, PHP_URL_PATH);
         $kodeBarang = basename($path);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Cari barang berdasarkan kode_barang
-        |--------------------------------------------------------------------------
-        */
-
-        $barang = Barang::where(
-            'kode_barang',
-            $request->kode_barang
+        $barang = Barang::whereRaw(
+            'TRIM(LOWER(kode_barang)) = ?',
+            [trim(strtolower($kodeBarang))]
         )->first();
 
         if (!$barang) {
-
             return response()->json([
-
-                'success' => false
-
+                'success' => false,
+                'message' => 'Barang tidak ditemukan'
             ]);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Update status barang
-        |--------------------------------------------------------------------------
-        */
+        // update status barang utama
+        $barang->status = $request->status;
+        $barang->save();
 
-        $barang->update([
-
-            'status' => $request->status
-
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Tambahkan timeline tracking
-        |--------------------------------------------------------------------------
-        */
-
+        // tambah timeline tracking
         Tracking::create([
-
             'barang_id' => $barang->id,
-
-            'status' => $request->status,
-
-            'lokasi' => $request->lokasi,
-
+            'status'    => $request->status,
+            'lokasi'    => $request->lokasi,
         ]);
+
+        // reload relasi terbaru
+        $barang->load('trackings');
 
         return response()->json([
-
             'success' => true,
-
             'barang' => $barang
-
         ]);
     }
 }

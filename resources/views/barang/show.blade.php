@@ -26,39 +26,11 @@
                 <th>Deskripsi</th>
                 <td>{{ $barang->deskripsi }}</td>
             </tr>
+            <tr>
+                <th>Status Barang</th>
+                <td>{{ $barang->status }}</td>
+            </tr>
         </table>
-
-        <hr>
-        <h3 class="mb-3">Update Status Distribusi</h3>
-        <form action="/barang/{{ $barang->id }}/update-status"method="POST">
-            @csrf
-            <div class="row">
-                <div class="col-md-4">
-                    <select name="status"class="form-control"required>
-                        <option value="">Pilih Status</option>
-                        <option value="Barang Diproses">Barang Diproses</option>
-                        <option value="Barang Dikirim">Barang Dikirim</option>
-                        <option value="Barang Sampai Gudang">Barang Sampai Gudang</option>
-                        <option value="Barang Diterima">Barang Diterima</option>
-                    </select>
-                </div>
-                
-                <div class="col-md-4">
-                    <input type="text"
-                        name="lokasi"
-                        class="form-control"
-                        placeholder="Lokasi distribusi"
-                        required>
-                </div>
-                
-                <div class="col-md-4">
-                    <button type="submit"
-                        class="btn btn-primary">
-                        Update Status
-                    </button>
-                </div>
-            </div>
-        </form>
 
         <hr>
         <h3 class="mb-4">Timeline Distribusi</h3>

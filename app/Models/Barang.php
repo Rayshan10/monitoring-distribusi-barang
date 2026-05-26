@@ -18,7 +18,8 @@ class Barang extends Model
 
     public function trackings()
     {
-        return $this->hasMany(Tracking::class);
+        return $this->hasMany(Tracking::class)
+            ->latest();
     }
 
     public function getRouteKeyName()
