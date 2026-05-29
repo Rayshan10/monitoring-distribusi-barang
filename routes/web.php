@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KurirController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RiwayatPengirimanController;
 
@@ -105,8 +106,13 @@ Route::middleware([
 
     Route::resource(
         'kurir',
-        \App\Http\Controllers\KurirController::class
+        KurirController::class
     );
+
+    Route::get(
+        '/kurir/{id}/statistik',
+        [KurirController::class, 'statistik']
+        )->name('kurir.statistik');
 
 });
 

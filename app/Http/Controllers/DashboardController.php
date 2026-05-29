@@ -109,8 +109,6 @@ class DashboardController extends Controller
 
             'barangDikirim',
 
-            'barangSampaiGudang',
-
             'barangDiterima',
 
             'trackingTerbaru',

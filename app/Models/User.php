@@ -47,4 +47,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function trackings()
+    {
+        return $this->hasMany(
+            \App\Models\Tracking::class
+        );
+    }
 }

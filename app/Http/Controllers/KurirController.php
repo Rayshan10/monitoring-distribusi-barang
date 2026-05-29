@@ -5,21 +5,52 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Tracking;
 
 class KurirController extends Controller
 {
-    public function index()
-    {
-        $kurir = User::where(
-            'role',
-            'kurir'
-        )->get();
+   public function index()
+{
+    $kurir = User::where(
+        'role',
+        'kurir'
+    )
+    ->withCount([
+        'trackings as total_aktivitas',
 
-        return view(
-            'kurir-admin.index',
-            compact('kurir')
-        );
-    }
+        'trackings as barang_dikirim' => function ($q) {
+            $q->where(
+                'status',
+                'Barang Dikirim'
+            );
+        },
+
+        'trackings as barang_diterima' => function ($q) {
+            $q->where(
+                'status',
+                'Barang Diterima'
+            );
+        }
+    ])
+    ->get();
+
+    $topKurir = User::where(
+        'role',
+        'kurir'
+    )
+    ->withCount('trackings')
+    ->orderByDesc('trackings_count')
+    ->take(5)
+    ->get();
+
+    return view(
+        'kurir-admin.index',
+        compact(
+            'kurir',
+            'topKurir'
+        )
+    );
+}
 
     public function create()
     {
@@ -113,4 +144,57 @@ class KurirController extends Controller
                 'Kurir berhasil dihapus'
             );
     }
+
+    public function statistik($id)
+{
+    $kurir = User::findOrFail($id);
+
+    $totalAktivitas = Tracking::where(
+        'user_id',
+        $id
+    )->count();
+
+    $barangDikirim = Tracking::where(
+        'user_id',
+        $id
+    )
+    ->where(
+        'status',
+        'Barang Dikirim'
+    )
+    ->count();
+
+    $barangDiterima = Tracking::where(
+        'user_id',
+        $id
+    )
+    ->where(
+        'status',
+        'Barang Diterima'
+    )
+    ->count();
+
+    $aktivitasBulanan = Tracking::selectRaw(
+            'MONTH(created_at) as bulan,
+             COUNT(*) as total'
+        )
+        ->where(
+            'user_id',
+            $id
+        )
+        ->groupBy('bulan')
+        ->orderBy('bulan')
+        ->get();
+
+    return view(
+        'kurir-admin.statistik',
+        compact(
+            'kurir',
+            'totalAktivitas',
+            'barangDikirim',
+            'barangDiterima',
+            'aktivitasBulanan'
+        )
+    );
+}
 }
