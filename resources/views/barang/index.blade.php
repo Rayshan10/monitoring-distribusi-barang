@@ -14,9 +14,6 @@
                 class="btn btn-primary">
                 Tambah Barang
             </a>
-            <a href="/barang/export/pdf-qr" class="btn btn-danger">
-                Export PDF QR
-            </a>
 
         </div>
 

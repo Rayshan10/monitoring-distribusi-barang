@@ -8,9 +8,7 @@
             <div class="col-md-6">
                 <label>Status Distribusi</label>
                 <select id="statusDistribusi" class="form-control">
-                    <option value="Barang Diproses">Barang Diproses</option>
                     <option value="Barang Dikirim">Barang Dikirim</option>
-                    <option value="Barang Sampai Gudang">Barang Sampai Gudang</option>
                     <option value="Barang Diterima">Barang Diterima</option>
                 </select>
             </div>
@@ -155,8 +153,7 @@ function onScanSuccess(decodedText)
         setTimeout(() => {
 
             window.location.href =
-                '/barang/' +
-                data.barang.kode_barang;
+                '/riwayat-pengiriman';
 
         }, 2000);
 

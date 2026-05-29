@@ -1,52 +1,160 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RiwayatPengirimanController;
+
+/*
+|--------------------------------------------------------------------------
+| Public Route
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard',
-    [App\Http\Controllers\DashboardController::class, 'index']
-    )->middleware(['auth'])
+/*
+|--------------------------------------------------------------------------
+| Auth Route
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Profile
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/profile',
+        [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile',
+        [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::delete('/profile',
+        [ProfileController::class, 'destroy'])
+        ->name('profile.destroy');
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin Route
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware([
+    'auth',
+    'role:admin'
+])->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/dashboard',
+        [DashboardController::class, 'index'])
         ->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    /*
+    |--------------------------------------------------------------------------
+    | Data Barang
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource(
+        'barang',
+        BarangController::class
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | QR Code
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/barang/{id}/download-qr',
+        [BarangController::class, 'downloadQr']);
+
+    Route::get('/barang/{id}/print-qr',
+        [BarangController::class, 'printQr']);
+
+    Route::get('/barang/export/pdf-qr',
+        [BarangController::class, 'exportPdfQr']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | SAW
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/hitung-saw',
+        [BarangController::class, 'hitungSAW']);
+
+    Route::get('/export-saw-pdf',
+        [BarangController::class, 'exportSAWPDF']);
+
 });
 
-Route::middleware('auth')->group(function () {
-    Route::resource('barang', BarangController::class);
-    Route::get('/barang/{id}/download-qr', [BarangController::class, 'downloadQr'])->middleware('auth');
-    Route::get('/barang/{id}/print-qr', [BarangController::class, 'printQr'])->middleware('auth');
+/*
+|--------------------------------------------------------------------------
+| Kurir Route
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware([
+    'auth',
+    'role:kurir'
+])->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scan QR
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/scan-qr', function () {
+
+        return view('scan.index');
+
+    });
+
+    Route::post('/scan/update-status',
+        [BarangController::class, 'scanUpdateStatus']);
+
+    Route::get(
+        '/riwayat-pengiriman',
+        [RiwayatPengirimanController::class, 'index']
+    );
+
 });
 
-Route::get('/scan-qr', function () {
-    return view('scan.index');
-})->middleware('auth');
+/*
+|--------------------------------------------------------------------------
+| Shared Route
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/barang/export/pdf-qr',
-    [BarangController::class, 'exportPdfQr'])
-    ->middleware('auth');
+Route::middleware('auth')->group(function () {
 
-Route::post('/barang/{id}/update-status',
-    [BarangController::class, 'updateStatus'])
-    ->middleware('auth');
+    /*
+    |--------------------------------------------------------------------------
+    | Update Status Manual
+    |--------------------------------------------------------------------------
+    */
 
-Route::post('/scan/update-status',
-    [BarangController::class, 'scanUpdateStatus'])
-    ->middleware('auth');
+    Route::post('/barang/{id}/update-status',
+        [BarangController::class, 'updateStatus']);
 
-Route::get('/hitung-saw',
-    [BarangController::class, 'hitungSAW'])
-    ->middleware('auth');
-
-Route::get('/export-saw-pdf',
-    [BarangController::class, 'exportSAWPDF'])
-    ->middleware('auth');
+});
 
 require __DIR__.'/auth.php';

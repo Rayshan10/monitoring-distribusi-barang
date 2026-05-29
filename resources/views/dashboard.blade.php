@@ -126,7 +126,6 @@
                             <option value="">Semua</option>
                             <option value="Barang Diproses">Barang Diproses</option>
                             <option value="Barang Dikirim">Barang Dikirim</option>
-                            <option value="Barang Sampai Gudang">Barang Sampai Gudang</option>
                             <option value="Barang Diterima">Barang Diterima</option>
                         </select>
                     </div>
@@ -380,10 +379,6 @@
                 </tbody>
 
             </table>
-
-            <a href="/export-saw-pdf" class="btn btn-danger mb-4">
-                Export PDF SAW
-            </a>
 
         </div>
 

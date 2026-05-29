@@ -40,12 +40,32 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+
+            /*
+            |--------------------------------------------------------------------------
+            | Semua user baru otomatis menjadi kurir
+            |--------------------------------------------------------------------------
+            */
+
+            'role' => 'kurir',
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        /*
+        |--------------------------------------------------------------------------
+        | Redirect berdasarkan role
+        |--------------------------------------------------------------------------
+        */
+
+        if ($user->role === 'admin') {
+
+            return redirect('/dashboard');
+
+        }
+
+        return redirect('/scan-qr');
     }
 }

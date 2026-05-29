@@ -56,44 +56,64 @@
         }
     </style>
 </head>
+
 <body>
 
 <div class="d-flex">
 
     <!-- Sidebar -->
     <div class="sidebar">
-
+        
         <div class="text-center py-4">
             <h4 class="text-white">
                 <i class="bi bi-box-seam"></i>
                 LOGISTIK
             </h4>
+            <small class="text-white">
+                {{ strtoupper(Auth::user()->role) }}
+            </small>
         </div>
 
-        <a href="/dashboard">
-            <i class="bi bi-speedometer2"></i>
-            Dashboard
-        </a>
+        {{-- MENU ADMIN --}}
+        @if(Auth::user()->role == 'admin')
+            <a href="{{ route('dashboard') }}">
+                <i class="bi bi-speedometer2"></i>
+                Dashboard
+            </a>
 
-        <a href="/barang">
-            <i class="bi bi-box"></i>
-            Data Barang
-        </a>
+            <a href="{{ route('barang.index') }}">
+                <i class="bi bi-box"></i>
+                Data Barang
+            </a>
 
-        <a href="#">
-            <i class="bi bi-truck"></i>
-            Pengiriman
-        </a>
+            <a href="/hitung-saw">
+                <i class="bi bi-graph-up-arrow"></i>
+                Perhitungan SAW
+            </a>
 
-        <a href="/scan-qr">
-            <i class="bi bi-qr-code-scan"></i>
-            Scan QR
-        </a>
+            <a href="/export-saw-pdf">
+                <i class="bi bi-file-earmark-pdf"></i>
+                Laporan SAW
+            </a>
 
-        <a href="#">
-            <i class="bi bi-file-earmark-text"></i>
-            Laporan
-        </a>
+            <a href="/barang/export/pdf-qr">
+                <i class="bi bi-qr-code"></i>
+                Export QR
+            </a>
+        @endif
+
+        {{-- MENU KURIR --}}
+        @if(Auth::user()->role == 'kurir')
+            <a href="/scan-qr">
+                <i class="bi bi-qr-code-scan"></i>
+                Scan QR
+            </a>
+
+            <a href="/riwayat-pengiriman">
+                <i class="bi bi-clock-history"></i>
+                Riwayat Pengiriman
+            </a>
+        @endif
 
     </div>
 
