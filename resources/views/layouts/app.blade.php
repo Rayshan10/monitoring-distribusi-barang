@@ -167,32 +167,60 @@
     <div class="content">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light navbar-custom rounded mb-4 px-3">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4 px-4">
         <div class="container-fluid">
-            <h5 class="mb-0">
-                Sistem Monitoring Distribusi Barang
-            </h5>
-
-    <div class="d-flex align-items-center gap-2">
-        <span>
-            Halo, {{ Auth::user()->name }}
-        </span>
-        <a href="/profile"
-            class="btn btn-primary btn-sm">
-            Profile
-        </a>
-        <form method="POST"
-            action="{{ route('logout') }}">
-            @csrf
-                <button type="submit"
-                    class="btn btn-danger btn-sm">
-                    Logout
-                </button>
-        </form>
-
-</div>
-
-        </nav>
+            <div>
+                <h4 class="mb-0 fw-bold">
+                    @yield('title', 'Dashboard')
+                </h4>
+                <small class="text-muted">
+                    Sistem Monitoring Distribusi Barang
+                </small>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="text-end me-3">
+                    <div class="fw-semibold">
+                        {{ Auth::user()->name }}
+                    </div>
+                    <small class="text-muted">
+                        {{ ucfirst(Auth::user()->role) }}
+                    </small>
+                </div>
+                <div class="dropdown">
+                    <button
+                        class="btn btn-light rounded-circle border"
+                        data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item"
+                                href="{{ route('profile.edit') }}">
+                                <i class="bi bi-person"></i>
+                                Profile
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <form
+                                method="POST"
+                                action="{{ route('logout') }}">
+                                @csrf
+                                <button
+                                    type="submit"
+                                    class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
 
         <!-- Main Content -->
         @yield('content')
